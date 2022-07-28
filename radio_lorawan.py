@@ -14,7 +14,7 @@ import subprocess
 import busio
 from digitalio import DigitalInOut, Direction, Pull
 import board
-# Import thte SSD1306 module.
+# Import the SSD1306 module.
 import adafruit_ssd1306
 # Import Adafruit TinyLoRa
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
@@ -57,7 +57,7 @@ devaddr = bytearray([0x00, 0x00, 0x00, 0x00])
 # TTN Network Key, 16 Bytes, MSB
 nwkey = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
-# TTN Application Key, 16 Bytess, MSB
+# TTN Application Key, 16 Bytes, MSB
 app = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 # Initialize ThingsNetwork configuration
@@ -76,6 +76,7 @@ def send_pi_data_periodic():
     send_pi_data(CPU)
     print('CPU:', CPU)
 
+
 def send_pi_data(data):
     # Encode float as int
     data = int(data * 100)
@@ -91,6 +92,7 @@ def send_pi_data(data):
     display.show()
     time.sleep(0.5)
 
+
 while True:
     packet = None
     # draw a box to clear the image
@@ -99,7 +101,7 @@ while True:
 
     # read the raspberry pi cpu load
     cmd = "top -bn1 | grep load | awk '{printf \"%.1f\", $(NF-2)}'"
-    CPU = subprocess.check_output(cmd, shell = True )
+    CPU = subprocess.check_output(cmd, shell=True)
     CPU = float(CPU)
 
     if not btnA.value:
@@ -118,7 +120,6 @@ while True:
         display.show()
         time.sleep(0.5)
         send_pi_data_periodic()
-
 
     display.show()
     time.sleep(.1)
