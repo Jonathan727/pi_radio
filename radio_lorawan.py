@@ -75,7 +75,7 @@ lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 # 2b array to store sensor data
 data_pkt = bytearray(2)
 # time to delay periodic packet sends (in seconds)
-data_pkt_delay = 5.0
+data_pkt_delay = 1.0
 
 
 def send_pi_data_periodic():
