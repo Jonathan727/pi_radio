@@ -93,33 +93,41 @@ def send_pi_data(data):
     time.sleep(0.5)
 
 
-while True:
-    packet = None
-    # draw a box to clear the image
+try:
+    while True:
+        packet = None
+        # draw a box to clear the image
+        display.fill(0)
+        display.text('RasPi LoRaWAN', 35, 0, 1)
+
+        # read the raspberry pi cpu load
+        cmd = "top -bn1 | grep load | awk '{printf \"%.1f\", $(NF-2)}'"
+        CPU = subprocess.check_output(cmd, shell=True)
+        CPU = float(CPU)
+
+        if not btnA.value:
+            # Send Packet
+            send_pi_data(CPU)
+        if not btnB.value:
+            # Display CPU Load
+            display.fill(0)
+            display.text('CPU Load %', 45, 0, 1)
+            display.text(str(CPU), 60, 15, 1)
+            display.show()
+            time.sleep(0.1)
+        if not btnC.value:
+            display.fill(0)
+            display.text('* Periodic Mode *', 15, 0, 1)
+            display.show()
+            time.sleep(0.5)
+            send_pi_data_periodic()
+
+        display.show()
+        time.sleep(.1)
+
+
+finally:
+    print("Goodbye")
     display.fill(0)
-    display.text('RasPi LoRaWAN', 35, 0, 1)
-
-    # read the raspberry pi cpu load
-    cmd = "top -bn1 | grep load | awk '{printf \"%.1f\", $(NF-2)}'"
-    CPU = subprocess.check_output(cmd, shell=True)
-    CPU = float(CPU)
-
-    if not btnA.value:
-        # Send Packet
-        send_pi_data(CPU)
-    if not btnB.value:
-        # Display CPU Load
-        display.fill(0)
-        display.text('CPU Load %', 45, 0, 1)
-        display.text(str(CPU), 60, 15, 1)
-        display.show()
-        time.sleep(0.1)
-    if not btnC.value:
-        display.fill(0)
-        display.text('* Periodic Mode *', 15, 0, 1)
-        display.show()
-        time.sleep(0.5)
-        send_pi_data_periodic()
-
+    display.text('Goodbye!', 15, 0, 1)
     display.show()
-    time.sleep(.1)
