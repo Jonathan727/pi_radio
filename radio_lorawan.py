@@ -10,6 +10,7 @@ Author: Brent Rubell for Adafruit Industries
 """
 import threading
 import time
+import signal
 import subprocess
 import busio
 from digitalio import DigitalInOut, Direction, Pull
@@ -18,6 +19,13 @@ import board
 import adafruit_ssd1306
 # Import Adafruit TinyLoRa
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
+
+# handle termination signal https://stackoverflow.com/a/24574672/2350083
+def sigterm_handler(_signo, _stack_frame):
+    # Raises SystemExit(0):
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 # Button A
 btnA = DigitalInOut(board.D5)
