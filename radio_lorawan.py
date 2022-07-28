@@ -20,10 +20,12 @@ import adafruit_ssd1306
 # Import Adafruit TinyLoRa
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
 
+
 # handle termination signal https://stackoverflow.com/a/24574672/2350083
 def sigterm_handler(_signo, _stack_frame):
     # Raises SystemExit(0):
     sys.exit(0)
+
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
@@ -81,6 +83,7 @@ data_pkt_delay = 1.0
 # lora.set_datarate("SF12BW125")
 lora.set_datarate("SF10BW125")
 
+
 def send_pi_data_periodic():
     threading.Timer(data_pkt_delay, send_pi_data_periodic).start()
     print("Sending periodic data...")
@@ -88,17 +91,26 @@ def send_pi_data_periodic():
     print('CPU:', CPU)
 
 
-def send_pi_data(data):
+def send_pi_data(data, count=1):
     # Encode float as int
     data = int(data * 100)
     # Encode payload as bytes
     data_pkt[0] = (data >> 8) & 0xff
     data_pkt[1] = data & 0xff
     # Send data packet
-    lora.send_data(data_pkt, len(data_pkt), lora.frame_counter)
-    lora.frame_counter += 1
+    for i in range(count):
+        bgColor = (i + 1) % 2
+        fgColor = i % 2
+        display.fill(bgColor)
+        display.text('Sending Packet...' + str(i + 1), 10, 5, fgColor)
+        display.text('Frame:' + str(lora.frame_counter), 15, 15, fgColor)
+        # display.text('Sending Packet...', 15, 15, 1)
+        display.show()
+        print('Sending Packet...' + str(i + 1))
+        lora.send_data(data_pkt, len(data_pkt), lora.frame_counter)
+        lora.frame_counter += 1
     display.fill(0)
-    display.text('Sent Data to TTN!', 15, 15, 1)
+    display.text('Sent Data!', 15, 15, 1)
     print('Data sent!')
     display.show()
     time.sleep(0.5)
@@ -125,6 +137,8 @@ try:
             display.text('CPU Load %', 45, 0, 1)
             display.text(str(CPU), 60, 15, 1)
             display.show()
+            time.sleep(0.1)
+            send_pi_data(CPU, 5)
             time.sleep(0.1)
         if not btnC.value:
             display.fill(0)
