@@ -77,6 +77,9 @@ data_pkt = bytearray(2)
 # time to delay periodic packet sends (in seconds)
 data_pkt_delay = 1.0
 
+# Wider Spread Factor
+# lora.set_datarate("SF12BW125")
+lora.set_datarate("SF10BW125")
 
 def send_pi_data_periodic():
     threading.Timer(data_pkt_delay, send_pi_data_periodic).start()
