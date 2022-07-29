@@ -29,6 +29,10 @@ def sigterm_handler(_signo, _stack_frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
+# Program Configuration
+# TODO: set this via program arguments
+_LAUNCH_PERIODIC_MODE_AUTOMATICALLY = False
+
 # Button A
 btnA = DigitalInOut(board.D5)
 btnA.direction = Direction.INPUT
@@ -128,6 +132,8 @@ def send_pi_data(data, count=1):
     time.sleep(0.5)
 
 
+isFirstRun = True
+
 try:
     while True:
         packet = None
@@ -152,7 +158,7 @@ try:
             time.sleep(0.1)
             send_pi_data(CPU, 5)
             time.sleep(0.1)
-        if not btnC.value:
+        if not btnC.value or (isFirstRun and _LAUNCH_PERIODIC_MODE_AUTOMATICALLY):
             display.fill(0)
             display.text('* Periodic Mode *', 15, 0, 1)
             display.show()
@@ -162,6 +168,8 @@ try:
         display.show()
         time.sleep(.1)
 
+        if isFirstRun:
+            isFirstRun = False
 
 finally:
     print("Goodbye")
