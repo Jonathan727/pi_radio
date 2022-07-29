@@ -80,8 +80,12 @@ ttn_config = TTN(devaddr, nwkey, app, country='US')
 lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 # 2b array to store sensor data
 data_pkt = bytearray(2)
+
+DATA_PKT_DELAY_SLOW = 5.0
+DATA_PKT_DELAY_MEDIUM = 1.0
+DATA_PKT_DELAY_FAST = 0.25
 # time to delay periodic packet sends (in seconds)
-data_pkt_delay = 1.0
+data_pkt_delay = DATA_PKT_DELAY_SLOW
 
 # Spread Factor and Bandwidth
 # lora.set_datarate("SF7BW125")
@@ -96,6 +100,18 @@ lora.set_datarate("SF10BW125")
 def send_pi_data_periodic():
     # hold A and C to cancel periodic mode
     while btnA.value or btnC.value:
+        # Set Speed
+        global data_pkt_delay
+        if not btnA.value:
+            data_pkt_delay = DATA_PKT_DELAY_FAST
+            display_periodic_delay()
+        if not btnB.value:
+            data_pkt_delay = DATA_PKT_DELAY_MEDIUM
+            display_periodic_delay()
+        if not btnC.value:
+            data_pkt_delay = DATA_PKT_DELAY_SLOW
+            display_periodic_delay()
+
         print("Sending periodic data...")
         send_pi_data(CPU)
         print('CPU:', CPU)
@@ -103,6 +119,13 @@ def send_pi_data_periodic():
 
     display.fill(0)
     display.text('* Stopping Periodic Mode *', 15, 0, 1)
+    display.show()
+    time.sleep(0.5)
+
+
+def display_periodic_delay():
+    display.fill(0)
+    display.text('Periodic Delay: ' + str(data_pkt_delay), 2, 0, 1)
     display.show()
     time.sleep(0.5)
 
