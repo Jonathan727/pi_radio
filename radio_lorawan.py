@@ -163,6 +163,17 @@ def send_pi_data(data, count=1):
     time.sleep(0.5)
 
 
+def display_temperature():
+    temperature = lora.get_temperature()
+    display.fill(0)
+    display.text('Temperature', 45, 0, 1)
+    display.text(str(temperature), 60, 15, 1)
+    deg_f = (temperature * 9 / 5.0) + 32
+    display.text(str(deg_f), 60, 25, 1)
+    display.show()
+    time.sleep(0.5)
+
+
 isFirstRun = True
 
 try:
