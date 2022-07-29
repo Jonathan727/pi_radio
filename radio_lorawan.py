@@ -8,6 +8,8 @@ Example for using the RFM9x Radio with Raspberry Pi and LoRaWAN
 Learn Guide: https://learn.adafruit.com/lora-and-lorawan-for-raspberry-pi
 Author: Brent Rubell for Adafruit Industries
 """
+import argparse
+import sys
 import threading
 import time
 import signal
@@ -20,6 +22,13 @@ import adafruit_ssd1306
 # Import Adafruit TinyLoRa
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
 
+argumentParser = argparse.ArgumentParser()
+argumentParser.add_argument('--periodic', default=False, action=argparse.BooleanOptionalAction,
+                            help='Start periodic mode immediately')
+arguments = argumentParser.parse_args()
+
+print(arguments)
+
 
 # handle termination signal https://stackoverflow.com/a/24574672/2350083
 def sigterm_handler(_signo, _stack_frame):
@@ -30,8 +39,7 @@ def sigterm_handler(_signo, _stack_frame):
 signal.signal(signal.SIGTERM, sigterm_handler)
 
 # Program Configuration
-# TODO: set this via program arguments
-_LAUNCH_PERIODIC_MODE_AUTOMATICALLY = False
+launch_periodic_mode_automatically = arguments.periodic
 
 # Button A
 btnA = DigitalInOut(board.D5)
@@ -181,7 +189,7 @@ try:
             time.sleep(0.1)
             send_pi_data(CPU, 5)
             time.sleep(0.1)
-        if not btnC.value or (isFirstRun and _LAUNCH_PERIODIC_MODE_AUTOMATICALLY):
+        if not btnC.value or (isFirstRun and launch_periodic_mode_automatically):
             display.fill(0)
             display.text('* Periodic Mode *', 15, 0, 1)
             display.show()
