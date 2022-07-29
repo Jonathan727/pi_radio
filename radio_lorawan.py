@@ -85,10 +85,17 @@ lora.set_datarate("SF10BW125")
 
 
 def send_pi_data_periodic():
-    threading.Timer(data_pkt_delay, send_pi_data_periodic).start()
-    print("Sending periodic data...")
-    send_pi_data(CPU)
-    print('CPU:', CPU)
+    # hold A and C to cancel periodic mode
+    while btnA.value or btnC.value:
+        print("Sending periodic data...")
+        send_pi_data(CPU)
+        print('CPU:', CPU)
+        time.sleep(data_pkt_delay)
+
+    display.fill(0)
+    display.text('* Stopping Periodic Mode *', 15, 0, 1)
+    display.show()
+    time.sleep(0.5)
 
 
 def send_pi_data(data, count=1):
