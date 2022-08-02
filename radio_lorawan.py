@@ -182,6 +182,11 @@ try:
         # draw a box to clear the image
         display.fill(0)
         display.text('RasPi LoRaWAN', 35, 0, 1)
+        temperature = lora.get_temperature()
+        deg_f = (temperature * 9 / 5.0) + 32
+        display.text('Temperature', 0, 10, 1)
+        display.text(str(temperature) + ' C', 12*7, 10, 1)
+        display.text(str(deg_f) + ' F', 60, 20, 1)
 
         # read the raspberry pi cpu load
         cmd = "top -bn1 | grep load | awk '{printf \"%.1f\", $(NF-2)}'"
