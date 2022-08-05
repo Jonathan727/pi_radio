@@ -75,13 +75,50 @@ irq = DigitalInOut(board.D22)
 rst = DigitalInOut(board.D25)
 
 # TTN Device Address, 4 Bytes, MSB
-devaddr = bytearray([0x00, 0x00, 0x00, 0x00])
+devaddr = bytearray([
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+])
 # TTN Network Key, 16 Bytes, MSB
-nwkey = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+nwkey = bytearray([
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+])
 # TTN Application Key, 16 Bytes, MSB
-app = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+app = bytearray([
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+])
 # Initialize ThingsNetwork configuration
 ttn_config = TTN(devaddr, nwkey, app, country='US')
 # Initialize lora object
@@ -101,6 +138,8 @@ data_pkt_delay = DATA_PKT_DELAY_SLOW
 # lora.set_datarate("SF8BW125")
 # lora.set_datarate("SF9BW125")
 lora.set_datarate("SF10BW125")
+
+
 # lora.set_datarate("SF11BW125")
 # lora.set_datarate("SF12BW125")
 
@@ -185,7 +224,7 @@ try:
         temperature = lora.get_temperature()
         deg_f = (temperature * 9 / 5.0) + 32
         display.text('Temperature', 0, 10, 1)
-        display.text(str(temperature) + ' C', 12*7, 10, 1)
+        display.text(str(temperature) + ' C', 12 * 7, 10, 1)
         display.text(str(deg_f) + ' F', 60, 20, 1)
 
         # read the raspberry pi cpu load
